@@ -1,0 +1,19 @@
+{
+  "name": "job-scheduler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://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:x-oauth-basic@github.com/nikasakandelidze/job-scheduler-workshop.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nikasakandelidze/job-scheduler-workshop/issues"
+  },
+  "homepage": "https://github.com/nikasakandelidze/job-scheduler-workshop#readme"
+}
