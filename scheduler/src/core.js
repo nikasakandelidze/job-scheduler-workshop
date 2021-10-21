@@ -1,21 +1,21 @@
 const cron = require("node-cron");
 const serviceRegistry = require("./serviceRegistry");
 
-const SetOfInProgressHealthchecks = new Set();
+const setOfInProgressHealthchecks = new Set();
 
 const scheduleHealthCheckEveryHour = async (serviceTagToCheck) => {
   const errorMessage = "";
-  cron.schedule("*/10 * * * * *", async () => {
+  cron.schedule("* * * * * *", async () => {
     if (
       !serviceTagToCheck ||
-      SetOfInProgressHealthchecks.has(serviceTagToCheck)
+      setOfInProgressHealthchecks.has(serviceTagToCheck)
     ) {
       errorMessage = `Healthcheck for Service tag ${serviceTagToCheck} can't be scheduled.`;
       console.log(errorMessage);
       return;
     }
     console.log(`scheduling Job for healthcheck of:  ${serviceTagToCheck}`);
-    SetOfInProgressHealthchecks.add(serviceTagToCheck);
+    setOfInProgressHealthchecks.add(serviceTagToCheck);
     const url = serviceRegistry.getHostIpPortForServiceId(serviceTagToCheck);
     if (!url) {
       errorMessage = `Healthcheck for Service tag ${serviceTagToCheck} can't be scheduled.`;
@@ -37,6 +37,11 @@ const scheduleHealthCheckEveryHour = async (serviceTagToCheck) => {
       errorMessage = `Problem with health-check service with tag ${serviceTagToCheck}`;
 
       console.log(errorMessage);
+    } finally {
+      console.log(
+        `removing ${serviceTagToCheck} tag from set of scheduled tags`
+      );
+      setOfInProgressHealthchecks.delete(serviceTagToCheck);
     }
   });
   return { status: "OK" };
