@@ -5,7 +5,7 @@ const SetOfInProgressHealthchecks = new Set();
 
 const scheduleHealthCheckEveryHour = async (serviceTagToCheck) => {
   const errorMessage = "";
-  cron.schedule("0 * * * *", async () => {
+  cron.schedule("*/10 * * * * *", async () => {
     if (
       !serviceTagToCheck ||
       SetOfInProgressHealthchecks.has(serviceTagToCheck)
@@ -14,8 +14,14 @@ const scheduleHealthCheckEveryHour = async (serviceTagToCheck) => {
       console.log(errorMessage);
       return;
     }
+    console.log(`scheduling Job for healthcheck of:  ${serviceTagToCheck}`);
     SetOfInProgressHealthchecks.add(serviceTagToCheck);
     const url = serviceRegistry.getHostIpPortForServiceId(serviceTagToCheck);
+    if (!url) {
+      errorMessage = `Healthcheck for Service tag ${serviceTagToCheck} can't be scheduled.`;
+      console.log(errorMessage);
+      return;
+    }
     try {
       const response = await axios.get(url);
       if (response.status === 200) {
@@ -33,7 +39,7 @@ const scheduleHealthCheckEveryHour = async (serviceTagToCheck) => {
       console.log(errorMessage);
     }
   });
-  return { status: "OK", errorMessage };
+  return { status: "OK" };
 };
 
 exports.scheduleHealthCheckEveryHour = scheduleHealthCheckEveryHour;
