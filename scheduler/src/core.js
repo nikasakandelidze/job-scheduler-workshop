@@ -23,7 +23,7 @@ const scheduleHealthCheckEveryHour = async (serviceTagToCheck) => {
       return;
     }
     try {
-      const response = await axios.get(url);
+      const response = await axios.get(url + "/api/health-check");
       if (response.status === 200) {
         console.log(
           `Health-check is ok for service with tag ${serviceTagToCheck}`
